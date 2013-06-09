@@ -2,10 +2,9 @@
 /*
  *  Instagram PHP SDK
  *  ------------------
- *
  *  A wrapper class to integrate Instagram's data into your application.
- *
- *
+ *  Include this class and start with the bootstrap file.
+ *  After you received your access token, the index file is a proper way to include everything.
 */
 
 class Instagram
@@ -30,6 +29,8 @@ class Instagram
             $this->setClientID($initValues["clientID"]);
             $this->setClientSecret($initValues["clientSecret"]);
             $this->setClientRedirectURI($initValues["clientRedirectURI"]);
+
+            if(!empty($initValues["clientAccessToken"])) $this->setAccessToken($initValues["clientAccessToken"]);
         }
     }
 
@@ -134,6 +135,7 @@ class Instagram
         curl_setopt($ch, CURLOPT_POST, count($data));
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         $response = json_decode(curl_exec($ch));
         curl_close($ch);
