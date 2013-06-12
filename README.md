@@ -16,12 +16,12 @@ You'll need
 
 Usage
 -----
-1) Download this wrapper class.
+1) Download this wrapper class, the bootstrap and the index file.
 
 2) Include it in any of your projects.
 
 3) Extract CLIENT ID, CLIENT SECRET and REDIRECT URI from your newly registered Instagram application ([instagram.com/developer/clients/manage](http://instagram.com/developer/clients/manage/)).
 
-4) Insert these information into the correct places of your Instagram instantiation (see below).
+4) Start bootstrap in a secured area in order to receive an access token just for your server application.
 
-5) Authenticate your app by clicking on the generated link and signing in.
+5) Use index as a normal integration of this class.

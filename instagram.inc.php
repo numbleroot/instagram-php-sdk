@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  *  Instagram PHP SDK
  *  ------------------
  *  A wrapper class to integrate Instagram's data into your application.
@@ -9,20 +9,45 @@
 
 class Instagram
 {
+    /**
+     *  Defines Instagram's authentication base URI
+     */
     const OAUTH_URI = "https://api.instagram.com/oauth/";
+
+    /**
+     *  Defines Instagram's API base URI
+     */
     const API_URI = "https://api.instagram.com/v1/";
+
+    /**
+     *  The user's/script's client ID
+     */
     private $clientID = 0;
+
+    /**
+     *  The user's/script's client secret
+     */
     private $clientSecret = 0;
+
+    /**
+     *  The user's/script's client redirect URI
+     */
     private $clientRedirectURI = "";
+
+    /**
+     *  The user's/script's access token
+     */
     private $accessToken = 0;
 
 
 
-    /*
-     *  Constructor.
-     *  Pass an array of required authentication data.
+    /**
+     *  Constructor
+     *
+     *  @param array $initValues Required initialization information
+     *  @return object Initialized object
      */
-    public function __construct($initValues)
+    public function __construct(array $initValues)
     {
         if(is_array($initValues))
         {
@@ -36,75 +61,146 @@ class Instagram
 
 
 
-    /*
-     *  Getters and Setters.
-     */
+    // Getters and Setters.
 
-    /* Returns the value of 'clientID' */
+    /**
+     *  Returns the value of 'clientID'
+     *
+     *  @return string The client ID
+     */
     public function getClientID()
     {
         return $this->clientID;
     }
 
-    /* Sets the value of 'clientID' */
-    public function setClientID($value)
+    /**
+     *  Sets the value of 'clientID'
+     *
+     *  @param string $value Value to be assigned to the variable
+     *  @return boolean
+     */
+    public function setClientID(string $value)
     {
-        if($value != "") $this->clientID = $value;
+        if($value != "")
+        {
+            $this->clientID = $value;
+
+            return true;
+        }
+        else return false;
     }
 
 
-    /* Returns the value of 'clientSecret' */
+    /**
+     *  Returns the value of 'clientSecret'
+     *
+     *  @return string The client secret
+     */
     public function getClientSecret()
     {
         return $this->clientSecret;
     }
 
-    /* Sets the value of 'clientSecret' */
-    public function setClientSecret($value)
+    /**
+     *  Sets the value of 'clientSecret'
+     *
+     *  @param string $value Value to be assigned to the variable
+     *  @return boolean
+     */
+    public function setClientSecret(string $value)
     {
-        if($value != "") $this->clientSecret = $value;
+        if($value != "")
+        {
+            $this->clientSecret = $value;
+
+            return true;
+        }
+        else return false;
     }
 
 
-    /* Returns the value of 'clientRedirectURI' */
+    /**
+     *  Returns the value of 'clientRedirectURI'
+     *
+     *  @return string The client redirect URI
+     */
     public function getClientRedirectURI()
     {
         return $this->clientRedirectURI;
     }
 
-    /* Sets the value of 'clientRedirectURI' */
-    public function setClientRedirectURI($value)
+    /**
+     *  Sets the value of 'clientRedirectURI'
+     *
+     *  @param string $value Value to be assigned to the variable
+     *  @return boolean
+     */
+    public function setClientRedirectURI(string $value)
     {
-        if($value != "") $this->clientRedirectURI = $value;
+        if($value != "")
+        {
+            $this->clientRedirectURI = $value;
+
+            return true;
+        }
+        else return false;
     }
 
 
-    /* Returns the value of 'accessToken' */
+    /**
+     *  Returns the value of 'accessToken'
+     *
+     *  @return string The access token
+     */
     public function getAccessToken()
     {
         return $this->accessToken;
     }
 
-    /* Sets the value of 'accessToken' */
-    public function setAccessToken($value)
+    /**
+     *  Sets the value of 'accessToken'
+     *
+     *  @param string $value Value to be assigned to the variable
+     *  @return boolean
+     */
+    public function setAccessToken(string $value)
     {
-        if($value != "") $this->accessToken = $value;
+        if($value != "")
+        {
+            $this->accessToken = $value;
+
+            return true;
+        }
+        else return false;
     }
 
 
 
-    /*
-     *  Helper methods.
-     */
+    // Helper methods.
 
-    /* Builds the required authentication URL from the delivered data. */
+    /**
+     *  Builds the required authentication URL from the delivered data.
+     *
+     *  @return string Authorization URL
+     */
     public function getAuthorizationURL()
     {
-        return self::OAUTH_URI."authorize/?client_id=".$this->getClientID()."&redirect_uri=".$this->getClientRedirectURI()."&response_type=code";
+        $data = array(
+            "client_id" => $this->getClientID(),
+            "redirect_uri" => $this->getClientRedirectURI(),
+            "response_type" => "code"
+        );
+
+        return self::OAUTH_URI."authorize/?".http_build_query($data);
     }
 
-    /* Method to ultimately handle all created URLs. Called by every API method. */
-    public function getContent($createdURL)
+    /**
+     *  Method to ultimately handle all created URLs. Called by every API method.
+     *
+     *  @param string $createdURL Valid API call
+     *  @return array or boolean
+     */
+    public function getContent(string $createdURL)
     {
         $jsonData = file_get_contents($createdURL);
 
@@ -118,8 +214,13 @@ class Instagram
         else return false;
     }
 
-    /* Retrieves an access_token in exchange for the authorization code. */
-    public function generateAccessToken($code)
+    /**
+     *  Retrieves an access_token in exchange for the authorization code.
+     *
+     *  @param string $code Received code from authorization call
+     *  @return string
+     */
+    public function generateAccessToken(string $code)
     {
         $data = array(
             "client_id" => $this->getClientID(),
@@ -144,11 +245,13 @@ class Instagram
     }
 
 
-    /*
-     *  API calls.
-     */
+    // API calls.
 
-    /* Requests images from the popular public stream. */
+    /**
+     *  Requests images from the popular public stream.
+     *
+     *  @return array or boolean
+     */
     public function getPopularMedia()
     {
         $request = self::API_URI."media/popular?client_id=".$this->getClientID();
@@ -156,7 +259,11 @@ class Instagram
         return $this->getContent($request);
     }
 
-    /* Method to get the images of your own feed. */
+    /**
+     *  Method to get the images of your own feed.
+     *
+     *  @return array or boolean
+     */
     public function getOwnFeed()
     {
         $request = self::API_URI."users/self/feed/?access_token=".$this->getAccessToken();
@@ -164,8 +271,18 @@ class Instagram
         return $this->getContent($request);
     }
 
-    /* Method to get the recent images of the submitted user's feed. */
-    public function getUserFeed($userID, $amount = false, $earlierThan = false, $laterThan = false, $maxID = false, $minID = false)
+    /**
+     *  Method to get the recent images of the submitted user's feed.
+     *
+     *  @param integer $userID The searched user's ID
+     *  @param integer $amount How many items you want to have back
+     *  @param integer $earlierThan Only media before this UNIX timestamp
+     *  @param integer $laterThan Only media after this UNIX timestamp
+     *  @param integer $maxID Media before this image ID
+     *  @param integer $minID Media after this image ID
+     *  @return array or boolean
+     */
+    public function getUserFeed(integer $userID, integer $amount = false, integer $earlierThan = false, integer $laterThan = false, integer $maxID = false, integer $minID = false)
     {
         $request = self::API_URI."users/".$userID."/media/recent/?access_token=".$this->getAccessToken();
 
